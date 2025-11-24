@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "esModuleInterop": false,
+      "strict": true,
+      "noImplicitAny": true,
+      "outDir": "lib",
+      "declaration": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["scripts/ops-generator.ts"]
+  }
