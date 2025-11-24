@@ -13,6 +13,16 @@ export type OpDescription =
   | BaseOp
   | SymbolOp
 
+
+export type AssemblerOperation =
+  | SymbolicLabel
+  | OpDescription;
+//   | InlineBytes
+//   | OffsetControl
+//   | VirtualOffsetControl
+//   | AlignOffsetControl
+//   | CompoundOperation;
+
 export enum Index {
   X = "x",
   Y = "y",

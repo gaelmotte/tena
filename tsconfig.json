@@ -7,8 +7,14 @@
       "outDir": "lib",
       "declaration": true,
       "sourceMap": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "paths": {
+        "@core/*": ["./src/*"],
+      }
     },
-    "include": ["src/**/*"],
-    "exclude": ["scripts/ops-generator.ts"]
+    "include": ["src/**/*", "projects/**/*"],
+    "exclude": ["scripts/ops-generator.ts"],
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    }
   }

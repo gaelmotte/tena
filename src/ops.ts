@@ -42,25 +42,27 @@ export function ADC(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([101, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([117, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([117, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([109, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([109, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([125, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([125, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([121, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([121, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([97, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([97, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([113, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([113, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -90,25 +92,27 @@ export function AND(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([37, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([53, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([53, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([45, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([45, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([61, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([61, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([57, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([57, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([33, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([33, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([49, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([49, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -132,13 +136,15 @@ export function ASL(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([6, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([22, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([22, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([14, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([14, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([30, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([30, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -178,6 +184,8 @@ export function BIT(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([36, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([44, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([44, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // BMI
@@ -286,25 +294,27 @@ export function CMP(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([197, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([213, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([213, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([205, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([205, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([221, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([221, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([217, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([217, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([193, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([193, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([209, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([209, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -324,6 +334,8 @@ export function CPX(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([228, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([236, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([236, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // CPY
@@ -342,6 +354,8 @@ export function CPY(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([196, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([204, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([204, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // DEC
@@ -360,13 +374,15 @@ export function DEC(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([198, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([214, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([214, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([206, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([206, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([222, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([222, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -412,25 +428,27 @@ export function EOR(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([69, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([85, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([85, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([77, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([77, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([93, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([93, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([89, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([89, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([65, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([65, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([81, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([81, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -450,13 +468,15 @@ export function INC(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([230, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([246, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([246, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([238, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([238, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([254, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([254, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -484,6 +504,8 @@ export function JMP(value: SymbolOr<Indirect>): OpDescription;
 export function JMP(a1?: any, a2?:any): OpDescription{
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([76, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([76, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Indirect") 
     return {type: "opDescription", bytes : new Uint8Array([108, a1.value])} as OpDescription
   if(arguments.length === 1 && a1.type === "SymbolicLabel") 
@@ -496,6 +518,8 @@ export function JSR(value: SymbolOr<Absolute>): OpDescription;
 export function JSR(a1?: any, a2?:any): OpDescription{
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([32, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([32, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // LDA
@@ -524,25 +548,27 @@ export function LDA(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([165, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([181, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([181, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([173, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([173, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([189, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([189, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([185, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([185, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([161, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([161, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([177, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([177, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -566,13 +592,15 @@ export function LDX(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([166, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([182, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([182, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([174, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([174, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([190, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([190, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -596,13 +624,15 @@ export function LDY(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([164, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([180, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([180, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([172, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([172, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([188, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([188, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -626,13 +656,15 @@ export function LSR(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([70, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([86, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([86, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([78, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([78, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([94, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([94, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -670,25 +702,27 @@ export function ORA(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([5, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([21, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([21, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([13, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([13, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([29, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([29, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([25, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([25, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([1, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([1, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([17, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([17, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -744,13 +778,15 @@ export function ROL(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([38, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([54, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([54, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([46, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([46, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([62, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([62, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -774,13 +810,15 @@ export function ROR(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([102, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([118, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([118, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([110, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([110, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([126, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([126, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -826,25 +864,27 @@ export function SBC(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([229, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([245, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([245, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([237, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([237, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([253, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([253, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([249, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([249, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([225, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([225, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([241, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([241, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -894,25 +934,27 @@ export function STA(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([133, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([149, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([149, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([141, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([141, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([157, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([157, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([153, a1.value & 0xff, a1.value >> 8])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([153, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([129, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") 
     return {type: "opDescription", bytes : new Uint8Array([129, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([145, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") 
     return {type: "opDescription", bytes : new Uint8Array([145, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
@@ -930,10 +972,12 @@ export function STX(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([134, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([150, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "y") 
     return {type: "opDescription", bytes : new Uint8Array([150, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([142, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([142, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // STY
@@ -950,10 +994,12 @@ export function STY(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([132, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([148, a1.value])} as OpDescription
- if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+ if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") 
     return {type: "opDescription", bytes : new Uint8Array([148, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
   if(arguments.length === 1 && a1.type === "Absolute") 
     return {type: "opDescription", bytes : new Uint8Array([140, a1.value & 0xff, a1.value >> 8])} as OpDescription
+  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
+    return {type: "opDescription", bytes : new Uint8Array([140, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // TAX

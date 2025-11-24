@@ -119,47 +119,49 @@ const getimplementationByAdressingMode = (op: InstructionEntry) => {
       return [
         `  if(arguments.length === 1 && a1.type === "Absolute") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value & 0xff, a1.value >> 8])} as OpDescription`,
+        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription`,
       ].join("\n");
     case "ZeroPage,X":
       return [
         `  if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "x") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value])} as OpDescription`,
-        ` if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        ` if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "x") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0]), symbol: a1, size:8, isRelative: false} as OpDescription`,
       ].join("\n");
     case "ZeroPage,Y":
       return [
         `  if(arguments.length === 2 && a1.type === "ZeroPage" && a2 === "y") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "y") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0]), symbol: a1, size:8, isRelative: false} as OpDescription`,
       ].join("\n");
     case "Absolute,X":
       return [
         `  if(arguments.length === 2 && a1.type === "Absolute" && a2 === "x") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value & 0xff, a1.value >> 8])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "x") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription`,
       ].join("\n");
     case "Absolute,Y":
       return [
         `  if(arguments.length === 2 && a1.type === "Absolute" && a2 === "y") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value & 0xff, a1.value >> 8])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `  if(arguments.length === 2 && a1.type === "SymbolicLabel"  && a2 === "y") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription`,
       ].join("\n");
     case "(Indirect,X)":
       return [
         `  if(arguments.length === 2 && a1.type === "Indirect" && a2 === "prex") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "prex") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0]), symbol: a1, size:8, isRelative: false} as OpDescription`,
       ].join("\n");
     case "(Indirect),Y":
       return [
         `  if(arguments.length === 2 && a1.type === "Indirect" && a2 === "posty") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
+        `  if(arguments.length === 2 && a1.type === "SymbolicLabel" && a2 === "posty") `,
         `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0]), symbol: a1, size:8, isRelative: false} as OpDescription`,
       ].join("\n");
     case "Implied":
