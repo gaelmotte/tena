@@ -4,6 +4,10 @@ export type Immediate = { type: "Immediate"; value: number };
 export type Absolute = { type: "Absolute"; value: number };
 export type ZeroPage = { type: "ZeroPage"; value: number };
 export type Indirect = { type: "Indirect"; value: number };
+// FIX FOR JMP
+export type IndirectLabel = Indirect & { symbol: SymbolicLabel }
+
+
 export type SymbolOr<T> = SymbolicLabel | T;
 
 export type BaseOp = { type: "opDescription"; bytes: Uint8Array };

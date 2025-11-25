@@ -4,7 +4,7 @@ type RevisitItem = {
   symbol: SymbolicLabel;
   itemOffset: number;
 };
-type SymbolTable = Record<string, number>;
+export type SymbolTable = Record<string, number>;
 type RevisitQueue = Array<RevisitItem>;
 type ResolutionResult = {
   resolved: boolean;
@@ -76,12 +76,24 @@ export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
       // is a symbolic op
       const symbolOp = op as SymbolOp;
 
-      // TODO Lookup symbols or revisit
-      op.bytes.forEach(
-        (byte: number) => (state.ROMBuffer[state.offset++] = byte)
-      );
+      const existingSymbol = state.symbols[symbolOp.symbol.value]
+      if( existingSymbol != undefined){
+        if(symbolOp.size == 16){
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) & 0xFF;
+          state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) >> 8;
+        }else{
+          // TODO ensure relative ofset is less in a Byte Range
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = existingSymbol - state.offset;
+        }
 
-      return;
+        return;
+      }
+
+      throw new Error("Revisiting ops not implemented yet", );
+
+  
 
     default:
       throw new Error("Not Implemented Yet");
@@ -92,7 +104,7 @@ const putAdress = (adress: number, state: AssemblerState) => {
   state.ROMBuffer[state.offset++] = adress & 0xff;
   state.ROMBuffer[state.offset++] = adress >> 8;
 };
-const processfooter = (state: AssemblerState) => {
+const processFooter = (state: AssemblerState) => {
   state.offset = 0x7FFA;
   putAdress(0x8000, state);
   putAdress(0x8001, state);
@@ -111,7 +123,7 @@ export const assemble = (ops: AssemblerOperation[]) => {
     processOp(op, state);
   }
 
-  processfooter(state);
+  processFooter(state);
 
   processHeader(state);
 

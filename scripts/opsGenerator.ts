@@ -176,10 +176,10 @@ const getimplementationByAdressingMode = (op: InstructionEntry) => {
       ].join("\n");
     case "Indirect":
       return [
+        `  if(arguments.length === 1 && a1.type === "Indirect" && !Object.keys(a1).includes("symbol")) `,
+        `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value & 0xff, a1.value >> 8])} as OpDescription`,
         `  if(arguments.length === 1 && a1.type === "Indirect") `,
-        `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, a1.value])} as OpDescription`,
-        `  if(arguments.length === 1 && a1.type === "SymbolicLabel") `,
-        `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0]), symbol: a1, size:8, isRelative: false} as OpDescription`,
+        `    return {type: "opDescription", bytes : new Uint8Array([${op.opcodebyte}, 0, 0]), symbol: a1.symbol, size:16, isRelative: false} as OpDescription`,
       ].join("\n");
     case "Relative":
       return [

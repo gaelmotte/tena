@@ -506,10 +506,10 @@ export function JMP(a1?: any, a2?:any): OpDescription{
     return {type: "opDescription", bytes : new Uint8Array([76, a1.value & 0xff, a1.value >> 8])} as OpDescription
   if(arguments.length === 1 && a1.type === "SymbolicLabel") 
     return {type: "opDescription", bytes : new Uint8Array([76, 0, 0]), symbol: a1, size:16, isRelative: false} as OpDescription
+  if(arguments.length === 1 && a1.type === "Indirect" && !Object.keys(a1).includes("symbol")) 
+    return {type: "opDescription", bytes : new Uint8Array([108, a1.value & 0xff, a1.value >> 8])} as OpDescription
   if(arguments.length === 1 && a1.type === "Indirect") 
-    return {type: "opDescription", bytes : new Uint8Array([108, a1.value])} as OpDescription
-  if(arguments.length === 1 && a1.type === "SymbolicLabel") 
-    return {type: "opDescription", bytes : new Uint8Array([108, 0]), symbol: a1, size:8, isRelative: false} as OpDescription
+    return {type: "opDescription", bytes : new Uint8Array([108, 0, 0]), symbol: a1.symbol, size:16, isRelative: false} as OpDescription
 throw new Error("not Implemented")
 }
 // JSR
