@@ -1,11 +1,13 @@
 import * as fsSync from 'fs';
 import { assemble } from "@core/assembler";
 import { AssemblerOperation, Index } from "@core/types";
-import { BIT, BNE, BPL, CLD, INX, JMP, LDA, LDX, RTI, SEI, STA, STX, TXA, TXS } from '@core/ops';
-import { a, label, u8 } from '@core/utils';
+import { BEQ, BIT, BNE, BPL, CLD, INC, INX, JMP, LDA, LDX, RTI, SEI, STA, STX, TXA, TXS } from '@core/ops';
+import { a, label, u8, zp } from '@core/utils';
 import { AUDIO, PPU } from '@core/hardware';
 import { formatRomLabels } from '@core/fceuxSymbolsFormmater';
+import { allocate, resetRam } from '@core/ram';
 
+const COUNTER = allocate("counter",2);
 
 const program: AssemblerOperation[] = [
     label("nmi"),
@@ -31,44 +33,23 @@ const program: AssemblerOperation[] = [
     BIT(a(PPU.PPUSTATUS)),
     BPL(label("waitPPUSTATUS2")),
 
-    TXA(),
-    label("zeroRam"),
-
-    STA(a(0x000), Index.X),
-    STA(a(0x100), Index.X),
-    STA(a(0x200), Index.X),
-    STA(a(0x300), Index.X),
-    STA(a(0x400), Index.X),
-    STA(a(0x500), Index.X),
-    STA(a(0x600), Index.X),
-    STA(a(0x700), Index.X),
-    INX(),
-    BNE(label("zeroRam")),
+    resetRam,
 
     label("waitPPUSTATUS3"),
     BIT(a(PPU.PPUSTATUS)),
     BPL(label("waitPPUSTATUS3")),
 
-
-    // send Audio PULSE
-    LDA(u8(0x01)),
-    STA(a(AUDIO.APUSTATUS)),
-
-    LDA(u8(0x08)),
-    STA(a(AUDIO.PULSE1_TIMERLO)),
-    LDA(u8(0x02)),
-    STA(a(AUDIO.PULSE1_TIMERHI)),
-    LDA(u8(0xbf)),
-    STA(a(AUDIO.PULSE1_VOLUME)),
-
     label("forever"),
+    INC(zp(COUNTER)),
+    BNE(label("noCounter+1")),
+    INC(zp(COUNTER+1)),
+    label("noCounter+1"),
     JMP(label("forever"))
     
-
-
 ];
 
 
 const result = assemble(program);
-fsSync.writeFileSync('beep.nes', result.buffer);
-fsSync.writeFileSync('beep.nes.0.nl', formatRomLabels(result.symbols));
+fsSync.writeFileSync('ram.nes', result.buffer);
+fsSync.writeFileSync('ram.nes.0.nl', formatRomLabels(result.symbols, 0x8000));
+fsSync.writeFileSync('ram.nes.ram.nl', formatRomLabels(result.ramSymbols));

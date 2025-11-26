@@ -1,8 +1,9 @@
-import { AssemblerOperation, SymbolicLabel, SymbolOp } from "./types";
+import { getRamSymbolTable } from "./ram";
+import { AssemblerOperation, CompoundOp, SymbolicLabel, SymbolOp } from "./types";
 
 type RevisitItem = {
-  symbol: SymbolicLabel;
   itemOffset: number;
+  symbolOp : SymbolOp;
 };
 export type SymbolTable = Record<string, number>;
 type RevisitQueue = Array<RevisitItem>;
@@ -40,6 +41,13 @@ export const processHeader = (state: AssemblerState) => {
   ]);
 
 };
+const printSymbol = (name: string, offset: number) => {
+  console.log(
+        `${name.padEnd(30, " ")} 0x${(offset)
+          .toString(16)
+          .padStart(4, "0")}`
+      );
+}
 
 export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
   switch (op.type) {
@@ -55,11 +63,7 @@ export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
       const labelOffset = state.offset;
 
       // if (!op.value.startsWith('__discard')) {
-      console.log(
-        `${op.value.padEnd(30, " ")} 0x${(labelOffset + 0x8000)
-          .toString(16)
-          .padStart(4, "0")}`
-      );
+      printSymbol(op.value, labelOffset + 0x8000);
       // }
 
       state.symbols[op.value] = labelOffset;
@@ -91,14 +95,46 @@ export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
         return;
       }
 
-      throw new Error("Revisiting ops not implemented yet", );
+      state.revisit.push({symbolOp, itemOffset: state.offset});
+      if(symbolOp.size == 16){
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+          state.ROMBuffer[state.offset++] = 0;
+        }else{
+          // TODO ensure relative ofset is less in a Byte Range
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+        }
 
-  
+      return;
+
+    case "compound": {
+      for (let compoundOp of op.operations ) {
+        processOp(compoundOp, state);
+      }
+    } return;
 
     default:
       throw new Error("Not Implemented Yet");
   }
 };
+
+const processRevisit = (revisit: RevisitItem, state: AssemblerState) => {
+  const existingSymbol = state.symbols[revisit.symbolOp.symbol.value];
+  if(existingSymbol == undefined){
+    throw new Error("Symbol not resolved:"+revisit.symbolOp.symbol.value);
+  }
+ 
+  if(revisit.symbolOp.size == 16){
+    state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+    state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) & 0xFF;
+    state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) >> 8;
+  }else{
+    // TODO ensure relative ofset is less in a Byte Range
+    state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+    state.ROMBuffer[revisit.itemOffset++] = existingSymbol - revisit.itemOffset;
+  }
+}
 
 const putAdress = (adress: number, state: AssemblerState) => {
   state.ROMBuffer[state.offset++] = adress & 0xff;
@@ -123,13 +159,22 @@ export const assemble = (ops: AssemblerOperation[]) => {
     processOp(op, state);
   }
 
+  for (let revisit of state.revisit){
+    processRevisit(revisit, state);
+  }
+
   processFooter(state);
 
   processHeader(state);
 
+  const ramSymbols = getRamSymbolTable();
+  Object.entries(ramSymbols).forEach(([label,value])=>printSymbol(label, value));
+
+
   return {
     buffer: state.ROMBuffer,
     symbols: state.symbols,
+    ramSymbols: ramSymbols,
     finalOffset: state.offset,
   };
 };

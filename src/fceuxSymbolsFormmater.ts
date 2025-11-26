@@ -1,7 +1,7 @@
 import { SymbolTable } from "./assembler";
 
-export const format = (symbols: SymbolTable) => {
+export const formatRomLabels = (symbols: SymbolTable, offset: number = 0) => {
   return Object.entries(symbols)
-    .map(([name, adress]) => `$${(adress + 0x8000).toString(16)}#${name}#`)
+    .map(([name, adress]) => `$${(adress + offset).toString(16)}#${name}#`)
     .join("\n");
 };

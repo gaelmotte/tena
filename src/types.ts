@@ -12,10 +12,13 @@ export type SymbolOr<T> = SymbolicLabel | T;
 
 export type BaseOp = { type: "opDescription"; bytes: Uint8Array };
 export type SymbolOp = BaseOp  & { symbol: SymbolicLabel, size: 8 | 16, isRelative : boolean };
+export type CompoundOp= { type: 'compound', operations: AssemblerOperation[]; };
+
 
 export type OpDescription =
   | BaseOp
   | SymbolOp
+  | CompoundOp
 
 
 export type AssemblerOperation =
