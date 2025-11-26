@@ -4,7 +4,6 @@ import { AssemblerOperation, Index } from "@core/types";
 import { BIT, BNE, BPL, CLD, INX, JMP, LDA, LDX, RTI, SEI, STA, STX, TXA, TXS } from '@core/ops';
 import { a, label, u8 } from '@core/utils';
 import { AUDIO, PPU } from '@core/hardware';
-import { formatRomLabels } from '@core/fceuxSymbolsFormmater';
 
 
 const program: AssemblerOperation[] = [
@@ -71,4 +70,4 @@ const program: AssemblerOperation[] = [
 
 const result = assemble(program);
 fsSync.writeFileSync('beep.nes', result.buffer);
-fsSync.writeFileSync('beep.nes.0.nl', formatRomLabels(result.symbols));
+fsSync.writeFileSync('beep.mlb', result.mesenBuffer);

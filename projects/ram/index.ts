@@ -51,5 +51,4 @@ const program: AssemblerOperation[] = [
 
 const result = assemble(program);
 fsSync.writeFileSync('ram.nes', result.buffer);
-fsSync.writeFileSync('ram.nes.0.nl', formatRomLabels(result.symbols, 0x8000));
-fsSync.writeFileSync('ram.nes.ram.nl', formatRomLabels(result.ramSymbols));
+fsSync.writeFileSync('ram.mlb', result.mesenBuffer);

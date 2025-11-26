@@ -1,0 +1,7 @@
+NesPrgRom:0:nmi
+NesPrgRom:1:reset
+NesPrgRom:10:waitPPUSTATUS1
+NesPrgRom:15:waitPPUSTATUS2
+NesPrgRom:1b:zeroRam
+NesPrgRom:36:waitPPUSTATUS3
+NesPrgRom:4f:forever

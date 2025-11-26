@@ -1,3 +1,4 @@
+import { format } from "./mesenSymbolsFormater";
 import { getRamSymbolTable } from "./ram";
 import { AssemblerOperation, CompoundOp, SymbolicLabel, SymbolOp } from "./types";
 
@@ -152,7 +153,7 @@ export const assemble = (ops: AssemblerOperation[]) => {
     offset: 0x0000,
     symbols: {},
     revisit: [],
-    ROMBuffer: new Uint8Array(0x8000), // Simple 32kb ROM only (for now)
+    ROMBuffer: new Uint8Array(0xA000), 
   };
 
   for (let op of ops) {
@@ -167,14 +168,10 @@ export const assemble = (ops: AssemblerOperation[]) => {
 
   processHeader(state);
 
-  const ramSymbols = getRamSymbolTable();
-  Object.entries(ramSymbols).forEach(([label,value])=>printSymbol(label, value));
-
 
   return {
     buffer: state.ROMBuffer,
-    symbols: state.symbols,
-    ramSymbols: ramSymbols,
+    mesenBuffer: format(state.symbols, getRamSymbolTable()),
     finalOffset: state.offset,
   };
 };

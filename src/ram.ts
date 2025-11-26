@@ -3,9 +3,10 @@ import { BNE, INX, LDA, LDX, STA } from "./ops";
 import { Index } from "./types";
 import { a, inline, label, u8 } from "./utils";
 
-type RamLabel = {
+export type RamLabel = {
   name: string;
   value: number;
+  valueEnd?: number;
 };
 
 type Page = {
@@ -64,6 +65,7 @@ export const allocate = (label: string, size: number, page: number = 0) => {
   const ramLabel: RamLabel = {
     name: label,
     value: page * 0x100 + allocatedPages[page].offset,
+    valueEnd: size === 1 ? undefined : page * 0x100 + allocatedPages[page].offset + size
   };
   allocatedPages[page].offset += size;
   allocatedPages[page].allocatedLabels.push(ramLabel);
@@ -72,11 +74,11 @@ export const allocate = (label: string, size: number, page: number = 0) => {
   return ramLabel.value;
 };
 
-export const getRamSymbolTable = (): SymbolTable => {
-  const table: SymbolTable = {};
+export const getRamSymbolTable = () => {
+  const table: RamLabel[] = [];
 
   allocatedPages.forEach((page) =>
-    page.allocatedLabels.forEach((label) => (table[label.name] = label.value))
+    page.allocatedLabels.forEach((label) => (table.push(label)))
   );
 
   return table;
