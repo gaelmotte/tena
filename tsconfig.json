@@ -10,7 +10,7 @@
       "moduleResolution": "node",
       "paths": {
         "@core/*": ["./src/*"],
-      }
+      },
     },
     "include": ["src/**/*", "projects/**/*"],
     "exclude": ["scripts/ops-generator.ts"],

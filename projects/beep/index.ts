@@ -6,6 +6,7 @@ import { a, label, u8 } from '@core/utils';
 import { AUDIO, PPU } from '@core/hardware';
 
 
+// https://www.moria.us/blog/2018/03/nes-development
 const program: AssemblerOperation[] = [
     label("nmi"),
     RTI(),
@@ -68,6 +69,6 @@ const program: AssemblerOperation[] = [
 ];
 
 
-const result = assemble(program);
+const result = assemble(program, { nmi: label("nmi"), reset: label("reset") });
 fsSync.writeFileSync('beep.nes', result.buffer);
 fsSync.writeFileSync('beep.mlb', result.mesenBuffer);

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "ts-node scripts/opsGenerator.ts"
+    "generate": "ts-node scripts/opsGenerator.ts",
+    "yychr": "wine ./tools/yy-chr20120407_en/yychr.exe"
   },
   "repository": {
     "type": "git",

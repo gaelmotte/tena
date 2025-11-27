@@ -58,14 +58,14 @@ export const allocate = (label: string, size: number, page: number = 0) => {
   }
 
   // ensure no overflow
-  if (255 < allocatedPages[page].offset + size) {
+  if (256 < allocatedPages[page].offset + size) {
     throw new Error("Page overflow, cannot allocate");
   }
 
   const ramLabel: RamLabel = {
     name: label,
     value: page * 0x100 + allocatedPages[page].offset,
-    valueEnd: size === 1 ? undefined : page * 0x100 + allocatedPages[page].offset + size
+    valueEnd: size === 1 ? undefined : page * 0x100 + allocatedPages[page].offset + size -1
   };
   allocatedPages[page].offset += size;
   allocatedPages[page].allocatedLabels.push(ramLabel);

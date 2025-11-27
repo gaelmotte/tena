@@ -1,23 +1,27 @@
+import { buffer } from "stream/consumers";
 import { format } from "./mesenSymbolsFormater";
 import { getRamSymbolTable } from "./ram";
-import { AssemblerOperation, CompoundOp, SymbolicLabel, SymbolOp } from "./types";
+import { AssemblerOperation, SymbolicLabel, SymbolOp } from "./types";
 
 type RevisitItem = {
   itemOffset: number;
-  symbolOp : SymbolOp;
+  symbolOp: SymbolOp;
 };
 export type SymbolTable = Record<string, number>;
 type RevisitQueue = Array<RevisitItem>;
-type ResolutionResult = {
-  resolved: boolean;
-  value: number;
-};
 
 type AssemblerState = {
   revisit: RevisitQueue;
   symbols: SymbolTable;
+  positionalSymbols: number[];
   offset: number;
   ROMBuffer: Uint8Array;
+};
+
+type VectorTable = {
+  nmi: SymbolicLabel;
+  reset: SymbolicLabel;
+  irq?: SymbolicLabel;
 };
 
 export const processHeader = (state: AssemblerState) => {
@@ -28,7 +32,7 @@ export const processHeader = (state: AssemblerState) => {
     0x1a,
     2, // 2x 16KB PRG-ROM Banks
     1, // 1x  8KB CHR-ROM
-    0, // mapper 0 (NROM)
+    1, // mapper 0 (NROM), vertical miroring
     0, // System: NES
     0, // padding
     0, // padding
@@ -40,18 +44,18 @@ export const processHeader = (state: AssemblerState) => {
     0, // padding
     ...state.ROMBuffer,
   ]);
-
 };
 const printSymbol = (name: string, offset: number) => {
   console.log(
-        `${name.padEnd(30, " ")} 0x${(offset)
-          .toString(16)
-          .padStart(4, "0")}`
-      );
-}
+    `${name.padEnd(30, " ")} 0x${offset.toString(16).padStart(4, "0")}`
+  );
+};
 
 export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
   switch (op.type) {
+    case "PositionalLabel":
+      state.positionalSymbols.push(state.offset);
+      return;
     case "SymbolicLabel":
       if (op.value in state.symbols) {
         // TODO: Improve these errors with positional information
@@ -81,39 +85,73 @@ export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
       // is a symbolic op
       const symbolOp = op as SymbolOp;
 
-      const existingSymbol = state.symbols[symbolOp.symbol.value]
-      if( existingSymbol != undefined){
-        if(symbolOp.size == 16){
-          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
-          state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) & 0xFF;
-          state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) >> 8;
-        }else{
-          // TODO ensure relative ofset is less in a Byte Range
-          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
-          state.ROMBuffer[state.offset++] = existingSymbol - state.offset;
+      if (symbolOp.symbol.type === "SymbolicLabel") {
+        const existingSymbol = state.symbols[symbolOp.symbol.value];
+        if (existingSymbol != undefined) {
+          if (symbolOp.size == 16) {
+            state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+            state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) & 0xff;
+            state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) >> 8;
+          } else {
+            // TODO ensure relative ofset is less in a Byte Range
+            state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+            state.ROMBuffer[state.offset++] = existingSymbol - state.offset;
+          }
+
+          return;
         }
 
-        return;
+        state.revisit.push({ symbolOp, itemOffset: state.offset });
+        if (symbolOp.size == 16) {
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+          state.ROMBuffer[state.offset++] = 0;
+        } else {
+          // TODO ensure relative ofset is less in a Byte Range
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+        }
+      } else {
+        // is a positional symbol
+        if (symbolOp.symbol.value < 0) {
+          const existingSymbol =
+            state.positionalSymbols[
+              state.positionalSymbols.length + symbolOp.symbol.value // value is negative
+            ];
+          if (symbolOp.size == 16) {
+            state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+            state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) & 0xff;
+            state.ROMBuffer[state.offset++] = (existingSymbol + 0x8000) >> 8;
+          } else {
+            // TODO ensure relative ofset is less in a Byte Range
+            state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+            state.ROMBuffer[state.offset++] = existingSymbol - state.offset;
+          }
+
+          return;
+        }
+        // futur positional symbol
+        state.revisit.push({ symbolOp, itemOffset: state.offset });
+        if (symbolOp.size == 16) {
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+          state.ROMBuffer[state.offset++] = 0;
+        } else {
+          // TODO ensure relative ofset is less in a Byte Range
+          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
+          state.ROMBuffer[state.offset++] = 0;
+        }
       }
-
-      state.revisit.push({symbolOp, itemOffset: state.offset});
-      if(symbolOp.size == 16){
-          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
-          state.ROMBuffer[state.offset++] = 0;
-          state.ROMBuffer[state.offset++] = 0;
-        }else{
-          // TODO ensure relative ofset is less in a Byte Range
-          state.ROMBuffer[state.offset++] = symbolOp.bytes[0];
-          state.ROMBuffer[state.offset++] = 0;
-        }
 
       return;
 
-    case "compound": {
-      for (let compoundOp of op.operations ) {
-        processOp(compoundOp, state);
+    case "compound":
+      {
+        for (let compoundOp of op.operations) {
+          processOp(compoundOp, state);
+        }
       }
-    } return;
+      return;
 
     default:
       throw new Error("Not Implemented Yet");
@@ -121,53 +159,96 @@ export const processOp = (op: AssemblerOperation, state: AssemblerState) => {
 };
 
 const processRevisit = (revisit: RevisitItem, state: AssemblerState) => {
-  const existingSymbol = state.symbols[revisit.symbolOp.symbol.value];
-  if(existingSymbol == undefined){
-    throw new Error("Symbol not resolved:"+revisit.symbolOp.symbol.value);
+  if (revisit.symbolOp.symbol.type === "SymbolicLabel") {
+    const existingSymbol = state.symbols[revisit.symbolOp.symbol.value];
+    if (existingSymbol == undefined) {
+      throw new Error("Symbol not resolved:" + revisit.symbolOp.symbol.value);
+    }
+
+    if (revisit.symbolOp.size == 16) {
+      state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+      state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) & 0xff;
+      state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) >> 8;
+    } else {
+      // TODO ensure relative ofset is less in a Byte Range
+      state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+      state.ROMBuffer[revisit.itemOffset++] =
+        existingSymbol - revisit.itemOffset;
+    }
+  } else {
+    // positional symbol
+    if (revisit.symbolOp.symbol.value < 0)
+      throw new Error("we should not have revisited this");
+    const existingSymbol = state.positionalSymbols.filter(
+      (it) => it > revisit.itemOffset
+    )[0];
+    if (revisit.symbolOp.size == 16) {
+      state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+      state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) & 0xff;
+      state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) >> 8;
+    } else {
+      // TODO ensure relative ofset is less in a Byte Range
+      state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
+      state.ROMBuffer[revisit.itemOffset++] =
+        existingSymbol - revisit.itemOffset;
+    }
   }
- 
-  if(revisit.symbolOp.size == 16){
-    state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
-    state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) & 0xFF;
-    state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) >> 8;
-  }else{
-    // TODO ensure relative ofset is less in a Byte Range
-    state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
-    state.ROMBuffer[revisit.itemOffset++] = existingSymbol - revisit.itemOffset;
-  }
-}
+};
 
 const putAdress = (adress: number, state: AssemblerState) => {
   state.ROMBuffer[state.offset++] = adress & 0xff;
   state.ROMBuffer[state.offset++] = adress >> 8;
 };
-const processFooter = (state: AssemblerState) => {
-  state.offset = 0x7FFA;
-  putAdress(0x8000, state);
-  putAdress(0x8001, state);
-  putAdress(0x0000, state);
+const processFooter = (vectors: VectorTable, state: AssemblerState) => {
+  state.offset = 0x7ffa;
+  if (state.symbols[vectors.nmi.value] == undefined)
+    throw new Error("Unresolved nmi");
+  if (state.symbols[vectors.reset.value] == undefined)
+    throw new Error("Unresolved reset");
+  putAdress(state.symbols[vectors.nmi.value] + 0x8000, state);
+  putAdress(state.symbols[vectors.reset.value] + 0x8000, state);
+  putAdress(
+    vectors.irq?.value
+      ? state.symbols[vectors.irq?.value]
+        ? state.symbols[vectors.nmi.value] + 0x8000
+        : 0x0000
+      : 0x0000,
+    state
+  );
 };
 
-export const assemble = (ops: AssemblerOperation[]) => {
+const processChrRom = (chrrom: Buffer, state: AssemblerState) => {
+  for (let byte of chrrom) {
+    state.ROMBuffer[state.offset++] = byte;
+  }
+};
+
+export const assemble = (
+  ops: AssemblerOperation[],
+  vectors: VectorTable,
+  chrrom?: any
+) => {
   const state: AssemblerState = {
     offset: 0x0000,
     symbols: {},
+    positionalSymbols: [],
     revisit: [],
-    ROMBuffer: new Uint8Array(0xA000), 
+    ROMBuffer: new Uint8Array(0xa000),
   };
 
   for (let op of ops) {
     processOp(op, state);
   }
 
-  for (let revisit of state.revisit){
+  for (let revisit of state.revisit) {
     processRevisit(revisit, state);
   }
 
-  processFooter(state);
+  processFooter(vectors, state);
+
+  processChrRom(chrrom, state);
 
   processHeader(state);
-
 
   return {
     buffer: state.ROMBuffer,
