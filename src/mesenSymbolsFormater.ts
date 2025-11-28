@@ -17,7 +17,7 @@ export const format = (symbols: SymbolTable, ramSymbols: RamLabel[]) => {
     ramSymbols
       .map((symbol) => {
         return `NesInternalRam:${symbol.value.toString(16)}${
-          symbol.valueEnd ? "-" + symbol.valueEnd : ""
+          symbol.valueEnd ? "-" + symbol.valueEnd.toString(16) : ""
         }:${symbol.name}`;
       })
       .join("\n")
