@@ -99,4 +99,7 @@ export const resetRam = inline([
     STA(a(0x700), Index.X),
     INX(),
     BNE(label("zeroRam")),
-])
+]);
+
+/** tmp memory for local functions */
+export const tmp = allocate("tmp",10);

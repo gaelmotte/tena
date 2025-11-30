@@ -4,12 +4,10 @@ import { ADC, AND, BEQ, BNE, CLC, DEC, INC, LDA, STA } from "@core/ops";
 import { Buttons, down } from "./joypad";
 import { GROUND_POS } from "./game";
 import { getOAMAdress, OAMSpriteProperties } from "@core/oam";
-import { fixedPoint12_4 } from "@core/std/fixedPoint";
+import { fixedPoint12_4, twoComplement } from "@core/std/fixedPoint";
 
 const SPEED = 0b0001_1000;
-const twoComplement = (value:number) =>{
-  return ~value +1;
-}
+
 const {
   adress: playerY,
   add4_4: addPlayerY,

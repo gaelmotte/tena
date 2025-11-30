@@ -4,6 +4,7 @@ import { waitFrame } from "@core/std/nmi";
 import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { updatejoypad } from "./state/joypad";
 import { updatePlayerMouvement, updatePlayerSprite } from "./state/player";
+import { updateGame, updateGameScroll } from "./state/game";
 
 
 export const main = fn("main",({start})=>[
@@ -11,8 +12,12 @@ export const main = fn("main",({start})=>[
   JSR(waitFrame.start),
 
   JSR(updatejoypad.start),
+
   JSR(updatePlayerMouvement.start),
   JSR(updatePlayerSprite.start),
+
+  JSR(updateGame.start),
+  JSR(updateGameScroll.start),
 
   // move first sprite down
   INC(a(OAM_SHADOW)),

@@ -49,7 +49,7 @@ const program: AssemblerOperation[] = [
   JSR(initGame.start),
   JSR(initPlayer.start),
 
-  resetScroll,
+  JSR(resetScroll.start),
 
   // enable bg rendering and NMI
   JSR(enableNMI.start),
