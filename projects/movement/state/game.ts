@@ -5,7 +5,7 @@ import { fixedPoint12_4, fixedPoint4_4, twoComplement } from "@core/std/fixedPoi
 import { fn, inline, label, u8, zp } from "@core/utils";
 import { down, Buttons } from "./joypad";
 
-export const GROUND_POS = 10;
+export const GROUND_POS = 20;
 
 const speed = fixedPoint4_4("speed");
 const distance = fixedPoint12_4("distance");

@@ -35,10 +35,10 @@ export type FixedPoint12_4 = {
  */
 export type FixedPoint4_4 = {
   adress: number;
-//   add4_4: (adress: number | Immediate) => CompoundOp;
-//   sub4_4: (adress: number | Immediate) => CompoundOp;
-  lo: CompoundOp;
-  set: (value:number) => CompoundOp
+  add4_4: (adress?: number | Immediate) => CompoundOp;
+  sub4_4: (adress?: number | Immediate) => CompoundOp;
+  int: CompoundOp;
+  set: (value?:number) => CompoundOp
 };
 
 
@@ -182,15 +182,93 @@ export const fixedPoint4_4 = (name: string): FixedPoint4_4 => {
 
   return {
     adress,
-    lo: inline([
+    int: inline([
         LDA(zp(adress)),
         LSR(),
         LSR(),
         LSR(),
         LSR(),
     ]),
-    set: (value: number) => inline([
+    add4_4: (value?: number | Immediate): CompoundOp => {
+      if (typeof value === "number") {
+        if (!allocatedFixedPoints["4_4"].includes(value))
+          throw new Error("can only add FixedPoint4_4");
+
+        return inline([
+            LDA(zp(value)),
+            CLC(),
+            ADC(zp(adress)),
+            STA(zp(adress)),
+        ]);
+      }
+      // a contains a reference to the 4_4
+      if(value == undefined){
+        return inline([
+          STA(zp(tmp)),
+          LDA(u8(0)),
+          TAX(),
+          LDA(i(tmp),Index.PREX),
+          CLC(),
+          ADC(zp(adress)),
+          STA(zp(adress)),
+        ]);
+      }
+      // value is the number itsef
+      return inline([
+            LDA(value),
+            CLC(),
+            ADC(zp(adress)),
+            STA(zp(adress)),
+        ]);
+    },
+    sub4_4: (value?: number | Immediate): CompoundOp => {
+      if (typeof value === "number") {
+        if (!allocatedFixedPoints["4_4"].includes(value))
+          throw new Error("can only sub FixedPoint4_4");
+
+        return inline([
+            LDA(u8(0)),
+            SEC(),
+            SBC(u8(value)),
+            STA(zp(tmp)),
+            LDA(zp(adress)),
+            SEC(),
+            SBC(zp(tmp)),
+            STA(zp(adress)),
+        ]);
+      }
+      // a contains a reference to the 4_4
+      if(value == undefined){
+        return inline([
+          STA(zp(tmp)),
+          LDA(u8(0)),
+          TAX(),
+          LDA(u8(0)),
+          SEC(),
+          SBC(i(tmp),Index.PREX),
+          STA(zp(tmp)),
+          LDA(zp(adress)),
+          SEC(),
+          SBC(zp(tmp)),
+          STA(zp(adress)),
+        ]);
+      }
+      // value is the number itsef
+      return inline([
+            LDA(u8(0)),
+            SEC(),
+            SBC(value),
+            STA(zp(tmp)),
+            LDA(zp(adress)),
+            SEC(),
+            SBC(zp(tmp)),
+            STA(zp(adress))
+        ]);
+    },
+    set: (value?: number) => value != undefined ? inline([
         LDA(u8(lo(value))),
+        STA(zp(adress))
+    ]) : inline([
         STA(zp(adress))
     ])
   }
