@@ -71,5 +71,5 @@ const result = assemble(
   { nmi: nmiLabel, reset: label("reset") },
   chrrom
 );
-fsSync.writeFileSync("movement.nes", result.buffer);
-fsSync.writeFileSync("movement.mlb", result.mesenBuffer);
+fsSync.writeFileSync("chromedino.nes", result.buffer);
+fsSync.writeFileSync("chromedino.mlb", result.mesenBuffer);
