@@ -7,7 +7,7 @@ import { allocate } from "@core/ram";
 import { a, inline, label, u8, zp } from "@core/utils";
 import { SLEEPING } from "@core/std/nmi";
 import { twoByteCounterZp } from "@core/std/counters";
-import { draw } from "@core/ppu";
+import { draw, setScroll } from "@core/ppu";
 
 const {adress:FRAME_COUNTER, increment: incFrameCounter} = twoByteCounterZp("frameCounter")
 
@@ -30,6 +30,7 @@ export const nmi = inline([
   label("NoDma"),
 
   JSR(draw.start),
+  JSR(setScroll.start),
 
   LDA(u8(0)),
   STA(a(SLEEPING)),

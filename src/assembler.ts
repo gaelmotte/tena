@@ -181,7 +181,7 @@ const processRevisit = (revisit: RevisitItem, state: AssemblerState) => {
       throw new Error("we should not have revisited this");
     const existingSymbol = state.positionalSymbols.filter(
       (it) => it > revisit.itemOffset
-    )[0];
+    )[revisit.symbolOp.symbol.value -1];
     if (revisit.symbolOp.size == 16) {
       state.ROMBuffer[revisit.itemOffset++] = revisit.symbolOp.bytes[0];
       state.ROMBuffer[revisit.itemOffset++] = (existingSymbol + 0x8000) & 0xff;

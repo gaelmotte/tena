@@ -4,11 +4,11 @@ import { waitFrame } from "@core/std/nmi";
 import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { updatejoypad } from "./state/joypad";
 import { updatePlayerMouvement, updatePlayerSprite } from "./state/player";
-import { updateGame, updateGameScroll } from "./state/game";
+import { updateGame, updateGamebackground, updateGameScroll } from "./state/game";
 
 
 export const main = fn("main",({start})=>[
-  // wait for end of vblank
+  // wait for end of nmi
   JSR(waitFrame.start),
 
   JSR(updatejoypad.start),
@@ -17,12 +17,10 @@ export const main = fn("main",({start})=>[
   JSR(updatePlayerSprite.start),
 
   JSR(updateGame.start),
+  JSR(updateGamebackground.start),
   JSR(updateGameScroll.start),
 
-  // move first sprite down
-  INC(a(OAM_SHADOW)),
-  // set need dma
-  setNeedOam,
+
 
   JMP(start),
 ])

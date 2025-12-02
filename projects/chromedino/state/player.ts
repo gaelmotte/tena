@@ -3,7 +3,7 @@ import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { ADC, AND, BCC, BCS, BEQ, BMI, BNE, BPL, CLC, CMP, DEC, INC, JMP, JSR, LDA, LDY, RTS, STA, TYA } from "@core/ops";
 import { Buttons, down, pressed } from "./joypad";
 import { GROUND_POS } from "./game";
-import { getOAMAdress, OAMSpriteProperties } from "@core/oam";
+import { getOAMAdress, OAMSpriteProperties, setNeedOam } from "@core/oam";
 import { fixedPoint12_4, fixedPoint4_4, twoComplement } from "@core/std/fixedPoint";
 
 
@@ -142,6 +142,8 @@ export const updatePlayerMouvement = fn("updatePlayerMouvement", ({}) => [
 export const updatePlayerSprite = fn("updatePlayerSprite", () => [
   playerY.lo,
   STA(a(getOAMAdress(1, OAMSpriteProperties.POSITION_Y))),
+  // set need dma
+  setNeedOam,
 ]);
 
 export const playerFunctions = inline([

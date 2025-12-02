@@ -1,5 +1,5 @@
 import { LDA, CLC, ADC, STA, SEC, SBC, LSR, ROR, ORA, TAX, AND } from "@core/ops";
-import { allocate, tmp } from "@core/ram";
+import { allocate } from "@core/ram";
 import { CompoundOp, Immediate, Index } from "@core/types";
 import { hi, i, inline, lo, u8, zp } from "@core/utils";
 
@@ -41,7 +41,7 @@ export type FixedPoint4_4 = {
   set: (value?:number) => CompoundOp
 };
 
-
+const tmp = allocate("fptmp",2);
 
 //https://github.com/NesHacker/PlatformerMovement/blob/main/src/state/Player.s
 export const fixedPoint12_4 = (name: string): FixedPoint12_4 => {
