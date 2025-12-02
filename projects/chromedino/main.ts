@@ -5,6 +5,7 @@ import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { updatejoypad } from "./state/joypad";
 import { updatePlayerMouvement, updatePlayerSprite } from "./state/player";
 import { updateGame, updateGamebackground, updateGameScroll } from "./state/game";
+import { updateObstacles } from "./state/obstacles";
 
 
 export const main = fn("main",({start})=>[
@@ -20,9 +21,9 @@ export const main = fn("main",({start})=>[
   JSR(updateGamebackground.start),
   JSR(updateGameScroll.start),
 
+  JSR(updateObstacles.start),
+
 
 
   JMP(start),
 ])
-
-export const mainFunctions = inline([main.block]);

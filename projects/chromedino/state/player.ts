@@ -2,12 +2,11 @@ import { allocate } from "@core/ram";
 import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { ADC, AND, BCC, BCS, BEQ, BMI, BNE, BPL, CLC, CMP, DEC, INC, JMP, JSR, LDA, LDY, RTS, STA, TYA } from "@core/ops";
 import { Buttons, down, pressed } from "./joypad";
-import { GROUND_POS } from "./game";
 import { getOAMAdress, OAMSpriteProperties, setNeedOam } from "@core/oam";
 import { fixedPoint12_4, fixedPoint4_4, twoComplement } from "@core/std/fixedPoint";
 
-
-const JUMP_INITIAL_VELOCITY = 0b1110_1000;
+const GROUND_POS = 20;
+const JUMP_INITIAL_VELOCITY = twoComplement(0b0100_000);
 const MAX_FALL_SPEED = 0b0100_0000;
 const SCREEN_GROUND_POS = GROUND_POS * 8;
 
@@ -46,7 +45,7 @@ export const initPlayer = fn("initPlayer", ({}) => [
 ]);
 
 const updateJumpVelocity = fn("updateJumpVelocity", ()=>[
-  LDY(u8(5)),
+  LDY(u8(4)),
   playerYVelocity.int,
   CMP(u8(0x0E)),
   BPL(label("decelerate")),
@@ -55,7 +54,7 @@ const updateJumpVelocity = fn("updateJumpVelocity", ()=>[
   AND(u8(Buttons.BUTTON_A)),
   BEQ(label("decelerate")),
 
-  LDY(u8(2)),
+  LDY(u8(1)),
 
   label("decelerate"),
   TYA(),
@@ -146,13 +145,12 @@ export const updatePlayerSprite = fn("updatePlayerSprite", () => [
   setNeedOam,
 ]);
 
-export const playerFunctions = inline([
-  initPlayer.block,
-  initPlayerY.block,
-  initPlayerSprites.block,
-  updatePlayerMouvement.block,
-  updatePlayerSprite.block,
-  updateJumpVelocity.block,
-  applyVelocityY.block,
-  boundPositionY.block
-]);
+/**
+ * A contains the obstacle
+ */
+export const isAboveObstacle = fn("isAboveObstacle", () => [
+  // check if height is above obstacle
+  LDA(u8((GROUND_POS - 4) * 8)),
+  CMP(zp(playerSpriteY)),
+])
+

@@ -267,17 +267,3 @@ export const bufferDrawCell = inline([
   INY(),
   STY(zp(drawBufferIndex)),
 ]);
-
-export const ppuFunctions = inline([
-  fillLine.block,
-  fullLine.block,
-  resetScroll.block,
-  setShadowScroll.block,
-  setScroll.block,
-  enableNMI.block,
-  disableNMI.block,
-  draw.block,
-  calcTmpAdress.block,
-  bufferDrawColHeader.block,
-  setVramIncrement.block,
-]);

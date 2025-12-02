@@ -35,6 +35,9 @@ export type FnBlock = {
   end: SymbolicLabel;
   returnLabel: SymbolicLabel;
 }
+
+export const fnBlocks: CompoundOp[] = [];
+
 export const fn = (
   name: string,
   getOperations: (symbols: Omit<FnBlock, 'block'>) => AssemblerOperation[]
@@ -42,17 +45,20 @@ export const fn = (
   const start = label(name);
   const end = label(`${name}_end`);
   const ret = label(`${name}_ret`);
-
-  return {
-    start: start,
-    end: end,
-    returnLabel: ret,
-    block: inline([
+  const block = inline([
       start,
       ...getOperations({ start, end, returnLabel: ret }),
       ret,
       RTS(),
       end,
-    ])
+    ]);
+
+  fnBlocks.push(block);
+
+  return {
+    start: start,
+    end: end,
+    returnLabel: ret,
+    block
   };
 }

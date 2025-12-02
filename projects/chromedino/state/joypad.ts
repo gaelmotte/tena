@@ -49,5 +49,3 @@ export const readJoypad = fn("readJoypad", ({}) => [
 export const updatejoypad = fn("updatejoypad", ({})=>[
     JSR(readJoypad.start),
 ])
-
-export const joypadFunctions = inline([readJoypad.block,updatejoypad.block]);

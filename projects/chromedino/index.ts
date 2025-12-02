@@ -12,16 +12,15 @@ import {
   STX,
   TXS,
 } from "@core/ops";
-import { a, label, u8 } from "@core/utils";
+import { a, fnBlocks, label, u8 } from "@core/utils";
 import { AUDIO, PPU, VRAM_NAMETABLES } from "@core/hardware";
 import { resetRam } from "@core/ram";
 import { nmi, nmiLabel } from "./nmi";
-import { nmiFunctions } from "@core/std/nmi";
-import { main, mainFunctions } from "./main";
-import { enableNMI, fullLine, ppuFunctions, resetScroll, setVramColRow, waitPPU } from "@core/ppu";
-import { joypadFunctions } from "./state/joypad";
-import { initPlayer, playerFunctions } from "./state/player";
-import { gameFunctions, initGame } from "./state/game";
+import { main } from "./main";
+import { enableNMI, fullLine, resetScroll, setVramColRow, waitPPU } from "@core/ppu";
+import { initPlayer } from "./state/player";
+import { initGame } from "./state/game";
+import { initObstacles } from "./state/obstacles";
 
 const basePath = path.join(__dirname, "bin");
 const chrrom = fsSync.readFileSync(path.join(basePath, "CHR-ROM.bin"));
@@ -48,6 +47,7 @@ const program: AssemblerOperation[] = [
 
   JSR(initGame.start),
   JSR(initPlayer.start),
+  JSR(initObstacles.start),
 
   JSR(resetScroll.start),
 
@@ -58,12 +58,7 @@ const program: AssemblerOperation[] = [
 
   JSR(main.start),
 
-  mainFunctions,
-  nmiFunctions,
-  ppuFunctions,
-  joypadFunctions,
-  playerFunctions,
-  gameFunctions,
+  ...fnBlocks
 ];
 
 const result = assemble(

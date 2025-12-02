@@ -17,6 +17,15 @@ import {
   LDY,
   INY,
   STY,
+  ROR,
+  ASL,
+  ADC,
+  BCC,
+  JMP,
+  BRK,
+  CMP,
+  BPL,
+  BMI,
 } from "@core/ops";
 import {
   setVramColRow,
@@ -39,6 +48,8 @@ import { a, fn, inline, label, u8, zp } from "@core/utils";
 import { down, Buttons, pressed } from "./joypad";
 import { allocate, tmp } from "@core/ram";
 import { Index } from "@core/types";
+import { AandXtoObstacle, clearObstacle, drawObstacle, findObstacle } from "./obstacles";
+import { isAboveObstacle } from "./player";
 
 export const GROUND_POS = 20;
 
@@ -63,16 +74,23 @@ export const initGame = fn("initGame", ({}) => [
   JSR(fullLine.start),
   LDA(u8(3)),
   JSR(fullLine.start),
-
-  // LDA(u8(1)),
-  // LDX(u8(4)),
-  // label(),
-  // DEX(),
-  // JSR(drawCol.start),
-  // BNE(label(-1)),
-
-  // JSR(draw.start),
 ]);
+/**
+ * puts 
+ * a = nametable
+ * x = col
+ */
+export const distanceToAandX = fn("distanceToAandX",()=>[
+  distance.lo,
+  LSR(),
+  LSR(),
+  LSR(),
+  TAX(),
+
+  distance.hi,
+  AND(u8(0b00000001)),
+]);
+
 
 const checkStartGame = fn("checkStartGame", ({ returnLabel }) => [
   LDA(zp(gameStarted)),
@@ -87,9 +105,26 @@ const checkStartGame = fn("checkStartGame", ({ returnLabel }) => [
   speed.set(0b0001_1000),
 ]);
 
+const checkGameover = fn("checkGameover", ({returnLabel}) => [
+  JSR(distanceToAandX.start),
+  // increment x to match player x pos
+  INX(),
+  INX(),
+  JSR(AandXtoObstacle.start),
+  JSR(findObstacle.start),
+  BCC(returnLabel),
+
+  JSR(isAboveObstacle.start),
+  BPL(returnLabel),
+
+  JMP(label("reset"))
+  
+]);
+
 export const updateGame = fn("updateGame", () => [
   JSR(checkStartGame.start),
   distance.add4_4(speed.adress),
+  JSR(checkGameover.start),
 ]);
 
 export const updateGameScroll = fn("updateGameScroll", () => [
@@ -100,52 +135,13 @@ export const updateGameScroll = fn("updateGameScroll", () => [
   JSR(setShadowScroll.start),
 ]);
 
-/**
- * a : nametable
- * x : col
- */
-const drawCol = fn("drawCol", () => [
-  STX(zp(tmp)),
-  JSR(bufferDrawColHeader.start),
-
-  LDX(u8(GROUND_POS)),
-  LDA(u8(0)),
-  label(),
-  bufferDrawCell,
-  DEX(),
-  BNE(label(-1)),
-
-  LDA(u8(1)),
-  bufferDrawCell,
-
-  LDA(u8(2)),
-  bufferDrawCell,
-
-  LDA(u8(3)),
-  bufferDrawCell,
-
-  LDX(u8(7)),
-  LDA(u8(0)),
-  label(),
-  bufferDrawCell,
-  DEX(),
-  BNE(label(-1)),
-  LDX(zp(tmp)),
-]);
 
 export const updateGamebackground = fn("updateGamebackground", () => [
-  distance.hi,
-  AND(u8(0b00000001)),
-  EOR(u8(0b00000001)),
-  STA(zp(tmp)),
 
-  distance.lo,
-  LSR(),
-  LSR(),
-  LSR(),
-  TAX(),
+  JSR(distanceToAandX.start),
+  // xor the last bit of a to go to the other nametable
+  EOR(u8(1)),
 
-  LDA(zp(tmp)),
   LDY(u8(GROUND_POS -3)),
   JSR(calcTmpAdress.start),
   LDY(zp(drawBufferIndex)),
@@ -167,25 +163,17 @@ export const updateGamebackground = fn("updateGamebackground", () => [
   STA(a(drawBuffer), Index.Y),
   INY(),
 
-  LDA(u8(0x04)),
-  STA(a(drawBuffer), Index.Y),
-  INY(),
-  STA(a(drawBuffer), Index.Y),
-  INY(),
-  STA(a(drawBuffer), Index.Y),
-  INY(),
-  STA(a(drawBuffer), Index.Y),
-  INY(),
-  
+  JSR(distanceToAandX.start),
+  // xor the last bit of a to go to the other nametable
+  EOR(u8(1)),
+  JSR(AandXtoObstacle.start),
+  JSR(findObstacle.start),
+  BCC(label(1)),
+  JSR(drawObstacle.start),
+  JMP(label(2)),
+  label(),
+  JSR(clearObstacle.start),
+  label(),
   STY(zp(drawBufferIndex)),
 
-]);
-
-export const gameFunctions = inline([
-  initGame.block,
-  updateGame.block,
-  updateGameScroll.block,
-  checkStartGame.block,
-  drawCol.block,
-  updateGamebackground.block,
 ]);

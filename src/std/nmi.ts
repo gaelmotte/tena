@@ -10,5 +10,3 @@ export const waitFrame = fn("waitFrame",()=>[
     LDA(a(SLEEPING)),
     BNE(label(-1)),
 ])
-
-export const nmiFunctions = inline([waitFrame.block]);
