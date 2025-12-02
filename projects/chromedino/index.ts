@@ -18,7 +18,7 @@ import { resetRam } from "@core/ram";
 import { nmi, nmiLabel } from "./nmi";
 import { nmiFunctions } from "@core/std/nmi";
 import { main, mainFunctions } from "./main";
-import { enableNMI, fullLine, ppuFunctions, resetScroll, vramColRow, waitPPU } from "@core/ppu";
+import { enableNMI, fullLine, ppuFunctions, resetScroll, setVramColRow, waitPPU } from "@core/ppu";
 import { joypadFunctions } from "./state/joypad";
 import { initPlayer, playerFunctions } from "./state/player";
 import { gameFunctions, initGame } from "./state/game";
